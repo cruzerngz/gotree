@@ -1,21 +1,20 @@
 BINARIES = gotree
 BINDIR = bin
+SRCDIR = cmd
+
+BINPATHS = $(foreach bin, $(BINARIES), $(BINDIR)/$(bin))
+
+.PHONY: all builddir clean
 
 # this target should be the first one in the Makefile
 default:
 	@$(MAKE) --no-print-directory all
 
-all: builddir $(foreach bin, $(BINARIES), $(BINDIR)/$(bin))
-	make $(BINARIES)
+all: builddir $(BINPATHS)
 
-## magic sauce targets
-# build when binary name provided
-%: $(BINDIR)/%
-	@make $(BINDIR)/$*
-
-# build when binary path provided
-$(BINDIR)/%:
-	go build -o $(BINDIR)/$* cmd/$*/$*.go
+## matching names get built
+$(BINDIR)/%: $(SRCDIR)/%.go
+	go build -o $@ $<
 
 builddir:
 	@mkdir -p ./${BINDIR}
