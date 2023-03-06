@@ -11,8 +11,6 @@ import (
 	colour "github.com/TwiN/go-color"
 )
 
-// Third version of the tree function.
-//
 // This function is called at the top level with an empty prefix array.
 // During recursion, whatever new prefix is gets passed down to the inner function.
 // If the directory is the last in the array, the last flag is set.
@@ -37,6 +35,8 @@ func Tree(dirpath string, prefix []string, last bool) error {
 	} else {
 		displayLine(prefix, dirColour(filepath.Base(dirpath))) // dirs are displayed in green
 	}
+
+	// some prefix manip
 	setLastElement(prefix, consts.V_BLOCK)
 
 	if last {
@@ -48,7 +48,7 @@ func Tree(dirpath string, prefix []string, last bool) error {
 	for idx := 0; idx < len(dirs); idx++ {
 
 		if idx == last_index && last_index != last_dir {
-			prefix[len(prefix)-1] = consts.L_BLOCK
+			setLastElement(prefix, consts.L_BLOCK)
 		}
 
 		if dirs[idx].IsDir() {
@@ -61,7 +61,6 @@ func Tree(dirpath string, prefix []string, last bool) error {
 			}
 
 		} else {
-			// setLastElement(prefix, consts.T_BLOCK)
 			displayLine(prefix, dirs[idx].Name())
 		}
 	}
